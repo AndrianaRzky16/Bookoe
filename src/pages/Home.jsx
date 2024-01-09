@@ -9,6 +9,32 @@ const Home1Page = () => {
 
   const [highestRatedData, setHighestRatedData] = useState([]);
   const [allBooks, setAllBooks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSearchInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `https://bookapi.cm.hmw.lol/api/books/search?query=${encodeURIComponent(
+          searchQuery
+        )}`
+      );
+      const data = await response.json();
+      if (data && data.length > 0) {
+        // If search results exist, navigate to the search results page
+        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+      } else {
+        // If no search results, navigate to the 404 search page
+        navigate("/search404");
+      }
+    } catch (error) {
+      console.error("Search API error:", error);
+      navigate("/search404");
+    }
+  };
 
   useEffect(() => {
     axios
@@ -103,17 +129,21 @@ const Home1Page = () => {
                 className="bg-cover bg-no-repeat flex md:flex-1 flex-col h-[50px] items-start justify-end md:ml-[0] ml-[37px] md:mt-0 mt-[21px] p-[7px] w-[33%] md:w-full"
                 style={{ backgroundImage: "url('images/img_group39.svg')" }}
               >
-                <div className="flex flex-row gap-3.5 items-start justify-start ml-3.5 md:ml-[0] mt-1 w-[76%] md:w-full">
+                <div className="flex flex-row gap-2.5 items-start justify-start md:ml-[0] ml-[3px] mt-1 w-[76%] md:w-full">
                   <Img
                     className="h-8 mt-0.5 w-5"
                     src="images/img_search.svg"
                     alt="search"
                   />
-                  <input
-                    type="text"
-                    className="text-gray-500 border-none outline-none"
-                    placeholder="Search by title or author"
-                  />
+                  <form onSubmit={handleSearchSubmit}>
+                    <input
+                      type="text"
+                      className="text-gray-500 border-none outline-none w-full"
+                      placeholder="Search by title or author"
+                      value={searchQuery}
+                      onChange={handleSearchInputChange}
+                    />
+                  </form>
                 </div>
               </div>
               <Button
@@ -191,7 +221,7 @@ const Home1Page = () => {
                 </div>
                 <div className="h-[390px] mr-1.5 relative w-[37%] md:w-full ">
                   <div className="absolute h-[327px] inset-y-[0] my-auto right-[0] w-[70%]">
-                    {/* <Img
+                    <Img
                       className="absolute h-[272px] inset-y-[0] my-auto object-cover right-[0] rounded-[10px] w-[70%]"
                       src={item.image_url}
                       alt="productphoto"
@@ -199,8 +229,8 @@ const Home1Page = () => {
                     <Img
                       className="absolute h-[327px] inset-y-[0] left-[0] my-auto object-cover rounded-[10px] w-[84%]"
                       src={item.image_url}
-                      alt="productphoto_One" */}
-                    {/* /> */}
+                      alt="productphoto_One"
+                    />
                     <Img
                       className="absolute h-[390px] inset-y-[0] left-[0] my-auto object-cover rounded-[10px] w-[69%]"
                       src={item.image_url}

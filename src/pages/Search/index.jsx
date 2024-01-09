@@ -3,18 +3,36 @@ import React from "react";
 import { Button, Img, Line, List, Text } from "components";
 import Footer from "components/Footer";
 import Header from "components/Header";
-import { useHistory } from "react-router-dom";
 
-const SearchPage = ({ searchResults }) => {
-  const history = useHistory();
+import { useLocation } from "react-router-dom";
 
-  const handleBookClick = (bookId) => {
-    // Tambahkan logika untuk menangani saat buku di klik, misalnya ke halaman detail buku
-    console.log("Book clicked with ID:", bookId);
-  };
-  const SearchPage = () => {
-    return (
-      <>
+const SearchPage = () => {
+  const [searchResults, setSearchResults] = useState([]);
+  const location = useLocation();
+  const query = new URLSearchParams(location.search).get("query");
+
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      try {
+        const response = await fetch(
+          `https://bookapi.cm.hmw.lol/api/books/search?query=${encodeURIComponent(
+            query
+          )}`
+        );
+        const data = await response.json();
+        setSearchResults(data);
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        // Handle error or redirect to an error page
+      }
+    };
+
+    fetchSearchResults();
+  }, [query]);
+
+  return (
+    <>
+      {searchResults.map((result) => (
         <div className="bg-white-A700 flex flex-col font-poppins items-center justify-end mx-auto py-[30px] w-full">
           <div className="flex flex-col gap-[41px] items-center justify-start w-full">
             <div className="flex flex-col items-center justify-start max-w-[1246px] mx-auto md:px-5 w-full">
@@ -31,23 +49,23 @@ const SearchPage = ({ searchResults }) => {
                 className="sm:flex-col flex-row md:gap-10 gap-16 grid sm:grid-cols-1 md:grid-cols-2 grid-cols-4 justify-center mt-[77px] w-full"
                 orientation="horizontal"
               >
-                <div className="flex flex-1 flex-col items-start justify-start w-full">
+                <div className=" key= {result.id} flex flex-1 flex-col items-start justify-start w-full">
                   <Img
                     className="h-[340px] md:h-auto md:ml-[0] ml-[5px] object-cover rounded-lg w-[99%] sm:w-full"
-                    src="images/img_productphoto_340x260.png"
+                    src={result.image_url}
                     alt="productphoto"
                   />
                   <Text
                     className="leading-[32.00px] md:ml-[0] ml-[5px] mt-2.5 text-2xl md:text-[22px] text-black-900 sm:text-xl w-[99%] sm:w-full"
                     size="txtPoppinsSemiBold24"
                   >
-                    The Priory of The Orange Tree
+                    {result.title}
                   </Text>
                   <Text
                     className="md:ml-[0] ml-[5px] mt-2 text-black-900 text-xl"
                     size="txtPoppinsRegular20Black900"
                   >
-                    by Samanthan Shannon
+                    by {result.author.name}
                   </Text>
                   <Img
                     className="h-[25px] mt-[11px]"
@@ -56,105 +74,6 @@ const SearchPage = ({ searchResults }) => {
                   />
                   <Button
                     className="cursor-pointer font-medium leading-[normal] min-w-[260px] md:ml-[0] ml-[5px] mt-[11px] rounded-lg text-center text-xl"
-                    shape="round"
-                    color="deep_purple_A200"
-                    size="sm"
-                    variant="outline"
-                  >
-                    Read Book
-                  </Button>
-                </div>
-                <div className="flex flex-1 flex-col items-start justify-start w-full">
-                  <Img
-                    className="h-[340px] md:h-auto md:ml-[0] ml-[3px] object-cover rounded-lg w-[99%] sm:w-full"
-                    src="images/img_productphoto_2.png"
-                    alt="productphoto"
-                  />
-                  <Text
-                    className="md:ml-[0] ml-[3px] mt-1.5 text-2xl md:text-[22px] text-black-900 sm:text-xl"
-                    size="txtPoppinsSemiBold24"
-                  >
-                    The Time Has Come
-                  </Text>
-                  <Text
-                    className="md:ml-[0] ml-[3px] mt-[3px] text-black-900 text-xl"
-                    size="txtPoppinsRegular20Black900"
-                  >
-                    by Will Leitch
-                  </Text>
-                  <Img
-                    className="h-[25px] mt-[17px]"
-                    src="images/img_group2903.svg"
-                    alt="group2912"
-                  />
-                  <Button
-                    className="cursor-pointer font-medium leading-[normal] min-w-[260px] md:ml-[0] ml-[3px] mt-[42px] rounded-lg text-center text-xl"
-                    shape="round"
-                    color="deep_purple_A200"
-                    size="sm"
-                    variant="outline"
-                  >
-                    Read Book
-                  </Button>
-                </div>
-                <div className="flex flex-1 flex-col items-start justify-start w-full">
-                  <Img
-                    className="h-[340px] md:h-auto md:ml-[0] ml-[3px] object-cover rounded-lg w-[99%] sm:w-full"
-                    src="images/img_productphoto_3.png"
-                    alt="productphoto"
-                  />
-                  <Text
-                    className="md:ml-[0] ml-[3px] mt-1.5 text-2xl md:text-[22px] text-black-900 sm:text-xl"
-                    size="txtPoppinsSemiBold24"
-                  >
-                    Under The Skin
-                  </Text>
-                  <Text
-                    className="md:ml-[0] ml-[3px] mt-[3px] text-black-900 text-xl"
-                    size="txtPoppinsRegular20Black900"
-                  >
-                    by Linda Villarosa
-                  </Text>
-                  <Img
-                    className="h-[25px] mt-[18px]"
-                    src="images/img_group2903.svg"
-                    alt="group2913"
-                  />
-                  <Button
-                    className="cursor-pointer font-medium leading-[normal] min-w-[260px] md:ml-[0] ml-[3px] mt-[41px] rounded-lg text-center text-xl"
-                    shape="round"
-                    color="deep_purple_A200"
-                    size="sm"
-                    variant="outline"
-                  >
-                    Read Book
-                  </Button>
-                </div>
-                <div className="flex flex-1 flex-col items-start justify-start w-full">
-                  <Img
-                    className="h-[340px] md:h-auto md:ml-[0] ml-[3px] object-cover rounded-lg w-[99%] sm:w-full"
-                    src="images/img_productphoto_4.png"
-                    alt="productphoto"
-                  />
-                  <Text
-                    className="leading-[32.00px] md:ml-[0] ml-[3px] mt-2.5 text-2xl md:text-[22px] text-black-900 sm:text-xl w-[99%] sm:w-full"
-                    size="txtPoppinsSemiBold24"
-                  >
-                    (Forget a Mentor) Find a Sponsor
-                  </Text>
-                  <Text
-                    className="md:ml-[0] ml-[3px] mt-[7px] text-black-900 text-xl"
-                    size="txtPoppinsRegular20Black900"
-                  >
-                    by Sylvia Ann Hewlett
-                  </Text>
-                  <Img
-                    className="h-[25px] mt-[11px]"
-                    src="images/img_group2903.svg"
-                    alt="group2914"
-                  />
-                  <Button
-                    className="cursor-pointer font-medium leading-[normal] min-w-[260px] md:ml-[0] ml-[3px] mt-3 rounded-lg text-center text-xl"
                     shape="round"
                     color="deep_purple_A200"
                     size="sm"
@@ -211,9 +130,9 @@ const SearchPage = ({ searchResults }) => {
             <Footer className="flex font-dmsans items-center justify-center md:px-5 w-full" />
           </div>
         </div>
-      </>
-    );
-  };
+      ))}
+    </>
+  );
 };
 
 export default SearchPage;
