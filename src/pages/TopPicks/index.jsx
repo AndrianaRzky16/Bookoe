@@ -8,27 +8,31 @@ const TopPicksPage = () => {
   const navigate = useNavigate();
 
   const [allBooks, setAllBooks] = useState([]);
+  const sortByRating = "rating";
+  const sortDirection = "desc";
   const isTopPick = true;
 
   useEffect(() => {
     axios
-      .get("https://bookapi.cm.hmw.lol/api/books?page=3", {
+      .get("https://bookapi.cm.hmw.lol/api/books", {
         params: {
+          sort: sortByRating,
+          direction: sortDirection,
           is_top_pick: isTopPick.toString(),
         },
       })
       .then((response) => {
-        const topPicksData = response.data.data.map((book, index) => ({
+        const sortedBooksData = response.data.data.map((book, index) => ({
           ...book,
           label: index + 1,
         }));
-        setAllBooks(topPicksData);
-        console.log(topPicksData);
+        setAllBooks(sortedBooksData);
+        console.log(sortedBooksData);
       })
       .catch((error) => {
-        console.log("Error fetching top picks data: ", error);
+        console.log("Error fetching sorted books data: ", error);
       });
-  }, [isTopPick]);
+  }, [sortByRating, sortDirection, isTopPick]);
 
   return (
     <>
@@ -186,135 +190,6 @@ const TopPicksPage = () => {
                     </div>
                   </div>
                 ))}
-              {/* <div className="flex flex-1 flex-col items-start justify-start w-full">
-                <div className="h-[340px] md:ml-[0] ml-[3px] relative w-[99%]">
-                  <Img
-                    className="h-[340px] m-auto object-cover rounded-lg w-full"
-                    src="images/img_productphoto_2.png"
-                    alt="productphoto"
-                  />
-                  <div className="absolute bg-deep_purple-A200 flex flex-col items-end justify-start left-[0] p-[5px] rounded-br-[50px] rounded-tr-[50px] top-[9%]">
-                    <Text
-                      className="bg-white-A700 flex h-[30px] items-center justify-center rounded-[50%] text-[18.67px] text-center text-deep_purple-A200 w-[30px]"
-                      size="txtPoppinsRegular1867DeeppurpleA200"
-                    >
-                      2
-                    </Text>
-                  </div>
-                </div>
-                <Text
-                  className="md:ml-[0] ml-[3px] mt-1.5 text-2xl md:text-[22px] text-black-900 sm:text-xl"
-                  size="txtPoppinsSemiBold24"
-                >
-                  The Time Has Come
-                </Text>
-                <Text
-                  className="md:ml-[0] ml-[3px] mt-[3px] text-black-900 text-xl"
-                  size="txtPoppinsRegular20Black900"
-                >
-                  by Will Leitch
-                </Text>
-                <Img
-                  className="h-[25px] mt-[17px]"
-                  src="images/img_group2903.svg"
-                  alt="group2912"
-                />
-                <Button
-                  className="cursor-pointer font-medium leading-[normal] min-w-[260px] md:ml-[0] ml-[3px] mt-[42px] rounded-lg text-center text-xl"
-                  shape="round"
-                  color="deep_purple_A200"
-                  size="sm"
-                  variant="outline"
-                >
-                  Read Book
-                </Button>
-              </div>
-              <div className="flex flex-1 flex-col items-start justify-start w-full">
-                <div className="h-[340px] md:ml-[0] ml-[3px] relative w-[99%]">
-                  <Img
-                    className="h-[340px] m-auto object-cover rounded-lg w-full"
-                    src="images/img_productphoto_3.png"
-                    alt="productphoto"
-                  />
-                  <div className="absolute bg-deep_purple-A200 flex flex-col items-end justify-start left-[0] p-[5px] rounded-br-[50px] rounded-tr-[50px] top-[9%]">
-                    <Text
-                      className="bg-white-A700 flex h-[30px] items-center justify-center rounded-[50%] text-[18.67px] text-center text-deep_purple-A200 w-[30px]"
-                      size="txtPoppinsRegular1867DeeppurpleA200"
-                    >
-                      3
-                    </Text>
-                  </div>
-                </div>
-                <Text
-                  className="md:ml-[0] ml-[3px] mt-1.5 text-2xl md:text-[22px] text-black-900 sm:text-xl"
-                  size="txtPoppinsSemiBold24"
-                >
-                  Under The Skin
-                </Text>
-                <Text
-                  className="md:ml-[0] ml-[3px] mt-[3px] text-black-900 text-xl"
-                  size="txtPoppinsRegular20Black900"
-                >
-                  by Linda Villarosa
-                </Text>
-                <Img
-                  className="h-[25px] mt-[18px]"
-                  src="images/img_group2903.svg"
-                  alt="group2913"
-                />
-                <Button
-                  className="cursor-pointer font-medium leading-[normal] min-w-[260px] md:ml-[0] ml-[3px] mt-[41px] rounded-lg text-center text-xl"
-                  shape="round"
-                  color="deep_purple_A200"
-                  size="sm"
-                  variant="outline"
-                >
-                  Read Book
-                </Button>
-              </div>
-              <div className="flex flex-1 flex-col items-start justify-start w-full">
-                <div className="h-[340px] md:ml-[0] ml-[3px] relative w-[99%]">
-                  <Img
-                    className="h-[340px] m-auto object-cover rounded-lg w-full"
-                    src="images/img_productphoto_4.png"
-                    alt="productphoto"
-                  />
-                  <div className="absolute bg-deep_purple-A200 flex flex-col items-end justify-start left-[0] p-[5px] rounded-br-[50px] rounded-tr-[50px] top-[9%]">
-                    <Text
-                      className="bg-white-A700 flex h-[30px] items-center justify-center rounded-[50%] text-[18.67px] text-center text-deep_purple-A200 w-[30px]"
-                      size="txtPoppinsRegular1867DeeppurpleA200"
-                    >
-                      4
-                    </Text>
-                  </div>
-                </div>
-                <Text
-                  className="leading-[32.00px] md:ml-[0] ml-[3px] mt-2.5 text-2xl md:text-[22px] text-black-900 sm:text-xl w-[99%] sm:w-full"
-                  size="txtPoppinsSemiBold24"
-                >
-                  (Forget a Mentor) Find a Sponsor
-                </Text>
-                <Text
-                  className="md:ml-[0] ml-[3px] mt-[7px] text-black-900 text-xl"
-                  size="txtPoppinsRegular20Black900"
-                >
-                  by Sylvia Ann Hewlett
-                </Text>
-                <Img
-                  className="h-[25px] mt-[11px]"
-                  src="images/img_group2903.svg"
-                  alt="group2914"
-                />
-                <Button
-                  className="cursor-pointer font-medium leading-[normal] min-w-[260px] md:ml-[0] ml-[3px] mt-3 rounded-lg text-center text-xl"
-                  shape="round"
-                  color="deep_purple_A200"
-                  size="sm"
-                  variant="outline"
-                >
-                  Read Book
-                </Button>
-              </div> */}
             </List>
             <div className="bg-deep_purple-A200 flex flex-col gap-[22px] items-center justify-start mt-[126px] p-11 md:px-10 sm:px-5 rounded-[15px] w-full">
               <Text

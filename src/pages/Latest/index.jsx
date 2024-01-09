@@ -15,7 +15,7 @@ const LatestPage = () => {
       .then((response) => {
         const allBooksData = response.data.data;
         setAllBooks(allBooksData);
-        // console.log(allBooksData);
+        console.log(allBooksData);
       })
       .catch((error) => {
         console.log("Error fetching all books data: ", error);
